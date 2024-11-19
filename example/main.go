@@ -32,4 +32,12 @@ func main() {
 	}
 
 	fmt.Println("messages", resp)
+
+	presp, err := cli.PostChatMessage(orgRefID, &sessionID, "Hello, World!")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("messages", presp)
+
 }
