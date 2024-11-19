@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	protocol = "https"
+	protocol = "http"
 	basePath = "api/v1"
 	host     = "mai.10ure.com"
 )
