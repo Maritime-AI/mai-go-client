@@ -10,25 +10,24 @@ import (
 
 const (
 	protocol = "http"
+	basePath = "api/v1"
 )
 
 type Client struct {
 	host     string
 	apiToken string
-	basePath string
 }
 
-func NewClient(host, basePath, apiToken string) *Client {
+func NewClient(host, apiToken string) *Client {
 	return &Client{
 		host:     host,
 		apiToken: apiToken,
-		basePath: basePath,
 	}
 }
 
 func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	message string) (*models.ChatMessageResponse, error) {
-	transport := client.New(c.host, c.basePath, []string{protocol})
+	transport := client.New(c.host, basePath, []string{protocol})
 
 	// Initialize the formats registry
 	formats := strfmt.Default
@@ -55,7 +54,7 @@ func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 }
 
 func (c *Client) GetConversation(sessionID, orgRefID string) (*models.ChatMessageResponse, error) {
-	transport := client.New(c.host, c.basePath, []string{protocol})
+	transport := client.New(c.host, basePath, []string{protocol})
 
 	// Initialize the formats registry
 	formats := strfmt.Default
