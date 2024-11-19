@@ -9,8 +9,6 @@ import (
 
 func main() {
 	// NewDefaultClient returns a new default authenticator client
-	host := "mai.10ure.com"
-
 	apiToken := os.Getenv("MAI_API_TOKEN")
 	if len(apiToken) == 0 {
 		panic("MAI_API_TOKEN is not set")
@@ -26,7 +24,7 @@ func main() {
 		panic("ORG_REF_ID is not set")
 	}
 
-	cli := client.NewClient(host, apiToken)
+	cli := client.NewClient(apiToken)
 
 	resp, err := cli.GetConversation(sessionID, orgRefID)
 	if err != nil {
