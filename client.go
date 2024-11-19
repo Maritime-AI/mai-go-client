@@ -17,31 +17,49 @@ import (
 )
 
 const (
-	protocol    = "http"
-	basePath    = "api/v1"
-	defaultHost = "mai.10ure.com"
+	defaultProtocol = "https"
+	defaultHost     = "mai.10ure.com"
+	basePath        = "api/v1"
 )
+
+type Option func(c *Client)
+
+func WithHost(h string) Option {
+	return func(c *Client) {
+		c.host = h
+	}
+}
+
+func WithProtocol(p string) Option {
+	return func(c *Client) {
+		c.protocol = p
+	}
+}
 
 type Client struct {
 	host     string
+	protocol string
 	apiToken string
 }
 
-func NewClient(host, apiToken string) *Client {
-	if host == "" {
-		host = defaultHost
-	}
-
-	return &Client{
-		host:     host,
+func NewClient(apiToken string, opts ...Option) *Client {
+	c := &Client{
+		protocol: defaultProtocol,
+		host:     defaultHost,
 		apiToken: apiToken,
 	}
+
+	for _, opt := range opts {
+		opt(c)
+	}
+
+	return c
 }
 
 func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	message string) (*models.ChatMessageResponse, error) {
 
-	url := fmt.Sprintf("https://%s/api/v1/partners/organizations/%s/converse", c.host, orgRefID)
+	url := fmt.Sprintf("%s://%s/api/v1/partners/organizations/%s/converse", c.protocol, c.host, orgRefID)
 	fmt.Print("somshie")
 	data, err := json.Marshal(&models.ChatMessageParams{
 		Message:   message,
@@ -81,7 +99,7 @@ func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 }
 
 func (c *Client) GetConversation(sessionID, orgRefID string) (*models.ChatMessageResponse, error) {
-	transport := client.New(c.host, basePath, []string{protocol})
+	transport := client.New(c.host, basePath, []string{c.protocol})
 
 	// Initialize the formats registry
 	formats := strfmt.Default
