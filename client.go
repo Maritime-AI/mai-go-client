@@ -17,17 +17,23 @@ import (
 )
 
 const (
-	protocol = "http"
-	basePath = "api/v1"
-	host     = "mai.10ure.com"
+	protocol    = "http"
+	basePath    = "api/v1"
+	defaultHost = "mai.10ure.com"
 )
 
 type Client struct {
+	host     string
 	apiToken string
 }
 
-func NewClient(apiToken string) *Client {
+func NewClient(host, apiToken string) *Client {
+	if host == "" {
+		host = defaultHost
+	}
+
 	return &Client{
+		host:     host,
 		apiToken: apiToken,
 	}
 }
@@ -35,7 +41,7 @@ func NewClient(apiToken string) *Client {
 func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	message string) (*models.ChatMessageResponse, error) {
 
-	url := fmt.Sprintf("https://%s/api/v1/partners/organizations/%s/converse", host, orgRefID)
+	url := fmt.Sprintf("https://%s/api/v1/partners/organizations/%s/converse", c.host, orgRefID)
 	fmt.Print("somshie")
 	data, err := json.Marshal(&models.ChatMessageParams{
 		Message:   message,
@@ -75,7 +81,7 @@ func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 }
 
 func (c *Client) GetConversation(sessionID, orgRefID string) (*models.ChatMessageResponse, error) {
-	transport := client.New(host, basePath, []string{protocol})
+	transport := client.New(c.host, basePath, []string{protocol})
 
 	// Initialize the formats registry
 	formats := strfmt.Default

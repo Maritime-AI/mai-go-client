@@ -24,7 +24,7 @@ func main() {
 		panic("ORG_REF_ID is not set")
 	}
 
-	cli := client.NewClient(apiToken)
+	cli := client.NewClient("", apiToken)
 
 	resp, err := cli.GetConversation(sessionID, orgRefID)
 	if err != nil {
@@ -39,5 +39,4 @@ func main() {
 	}
 
 	fmt.Println("messages", presp)
-
 }
