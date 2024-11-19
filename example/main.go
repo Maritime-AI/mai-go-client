@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Maritime-AI/mai-go-client/client"
+	client "github.com/Maritime-AI/mai-go-client"
 )
 
 func main() {
