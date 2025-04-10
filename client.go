@@ -93,7 +93,7 @@ func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	req.Header.Set("Content-Type", "application/json")
 
 	httpCli := http.Client{
-		Timeout: time.Second * 10,
+		Timeout: c.timeout,
 	}
 
 	resp, err := httpCli.Do(req)
@@ -131,6 +131,7 @@ func (c *Client) GetConversation(sessionID, orgRefID string) (*models.ChatMessag
 	params := aiapi.NewGetPartnersOrganizationsIDConversationSessionIDParams().
 		WithSessionID(sessionID).
 		WithID(orgRefID)
+	WithTimeout(c.timeout)
 
 	resp, err := client.GetPartnersOrganizationsIDConversationSessionID(params, auth)
 	if err != nil {
