@@ -20,16 +20,28 @@ const (
 	defaultProtocol = "https"
 	defaultHost     = "mai.10ure.com"
 	basePath        = "api/v1"
+	defaultTimeout  = 60 * time.Second
 )
 
+// Option is a function that configures the client
+// It is used to set optional parameters for the client
 type Option func(c *Client)
 
+// WithTimeout sets the timeout for the client
+func WithTimeout(t time.Duration) Option {
+	return func(c *Client) {
+		c.timeout = t
+	}
+}
+
+// WithHost sets the host for the client
 func WithHost(h string) Option {
 	return func(c *Client) {
 		c.host = h
 	}
 }
 
+// WithProtocol sets the protocol for the client
 func WithProtocol(p string) Option {
 	return func(c *Client) {
 		c.protocol = p
@@ -40,13 +52,16 @@ type Client struct {
 	host     string
 	protocol string
 	apiToken string
+	timeout  time.Duration
 }
 
+// NewClient returns a new maritime ai client
 func NewClient(apiToken string, opts ...Option) *Client {
 	c := &Client{
 		protocol: defaultProtocol,
 		host:     defaultHost,
 		apiToken: apiToken,
+		timeout:  defaultTimeout,
 	}
 
 	for _, opt := range opts {
@@ -56,6 +71,7 @@ func NewClient(apiToken string, opts ...Option) *Client {
 	return c
 }
 
+// PostChatMessage sends a chat message to the oceo maritime ai api
 func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	message string) (*models.ChatMessageResponse, error) {
 
@@ -98,6 +114,7 @@ func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	return &respData, nil
 }
 
+// GetConversation retrieves the conversation for a given session ID and organization reference ID
 func (c *Client) GetConversation(sessionID, orgRefID string) (*models.ChatMessageResponse, error) {
 	transport := client.New(c.host, basePath, []string{c.protocol})
 
