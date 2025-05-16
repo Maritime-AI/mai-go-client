@@ -72,7 +72,7 @@ func NewClient(apiToken string, opts ...Option) *Client {
 	return c
 }
 
-func (c *Client) PostPartnerCrew(ctx context.Context, partnerRefID string, params models.CrewParams) error {
+func (c *Client) PostPartnerCrew(ctx context.Context, params models.CrewParams) error {
 
 	url := fmt.Sprintf("%s://%s/api/v1/partners/crew", c.protocol, c.host)
 
