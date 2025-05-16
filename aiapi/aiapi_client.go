@@ -30,11 +30,103 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
+	GetAdminsCustomers(params *GetAdminsCustomersParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAdminsCustomersOK, error)
+
+	GetAdminsCustomersUploads(params *GetAdminsCustomersUploadsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAdminsCustomersUploadsOK, error)
+
 	GetPartnersOrganizationsIDConversationSessionID(params *GetPartnersOrganizationsIDConversationSessionIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetPartnersOrganizationsIDConversationSessionIDOK, error)
+
+	PostAdminsLogin(params *PostAdminsLoginParams, opts ...ClientOption) (*PostAdminsLoginOK, error)
+
+	PostAdminsPartnersOrganizationsIDConverse(params *PostAdminsPartnersOrganizationsIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostAdminsPartnersOrganizationsIDConverseOK, error)
+
+	PostPartnersCrew(params *PostPartnersCrewParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersCrewNoContent, error)
 
 	PostPartnersOrganizationsIDConverse(params *PostPartnersOrganizationsIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersOrganizationsIDConverseOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
+}
+
+/*
+GetAdminsCustomers gets customers for admin
+
+Get customers for admin
+*/
+func (a *Client) GetAdminsCustomers(params *GetAdminsCustomersParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAdminsCustomersOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAdminsCustomersParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "GetAdminsCustomers",
+		Method:             "GET",
+		PathPattern:        "/admins/customers",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetAdminsCustomersReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAdminsCustomersOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for GetAdminsCustomers: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetAdminsCustomersUploads gets chat conversation
+
+Get chat conversation
+*/
+func (a *Client) GetAdminsCustomersUploads(params *GetAdminsCustomersUploadsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAdminsCustomersUploadsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAdminsCustomersUploadsParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "GetAdminsCustomersUploads",
+		Method:             "GET",
+		PathPattern:        "/admins/customers/uploads",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetAdminsCustomersUploadsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAdminsCustomersUploadsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for GetAdminsCustomersUploads: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
@@ -75,6 +167,128 @@ func (a *Client) GetPartnersOrganizationsIDConversationSessionID(params *GetPart
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for GetPartnersOrganizationsIDConversationSessionID: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PostAdminsLogin posts admin login
+
+Post admin login
+*/
+func (a *Client) PostAdminsLogin(params *PostAdminsLoginParams, opts ...ClientOption) (*PostAdminsLoginOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostAdminsLoginParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostAdminsLogin",
+		Method:             "POST",
+		PathPattern:        "/admins/login",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &PostAdminsLoginReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostAdminsLoginOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostAdminsLogin: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PostAdminsPartnersOrganizationsIDConverse posts chat message
+
+Post chat message
+*/
+func (a *Client) PostAdminsPartnersOrganizationsIDConverse(params *PostAdminsPartnersOrganizationsIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostAdminsPartnersOrganizationsIDConverseOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostAdminsPartnersOrganizationsIDConverseParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostAdminsPartnersOrganizationsIDConverse",
+		Method:             "POST",
+		PathPattern:        "/admins/partners/organizations/{id}/converse",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &PostAdminsPartnersOrganizationsIDConverseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostAdminsPartnersOrganizationsIDConverseOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostAdminsPartnersOrganizationsIDConverse: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PostPartnersCrew posts chat message
+
+Post chat message
+*/
+func (a *Client) PostPartnersCrew(params *PostPartnersCrewParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersCrewNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostPartnersCrewParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostPartnersCrew",
+		Method:             "POST",
+		PathPattern:        "/partners/crew",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &PostPartnersCrewReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostPartnersCrewNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostPartnersCrew: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

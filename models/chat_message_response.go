@@ -19,6 +19,9 @@ import (
 // swagger:model ChatMessageResponse
 type ChatMessageResponse struct {
 
+	// context
+	Context *ChatContext `json:"context,omitempty"`
+
 	// messages
 	Messages []*ChatMessage `json:"messages"`
 
@@ -33,6 +36,10 @@ type ChatMessageResponse struct {
 func (m *ChatMessageResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateContext(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateMessages(formats); err != nil {
 		res = append(res, err)
 	}
@@ -44,6 +51,25 @@ func (m *ChatMessageResponse) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ChatMessageResponse) validateContext(formats strfmt.Registry) error {
+	if swag.IsZero(m.Context) { // not required
+		return nil
+	}
+
+	if m.Context != nil {
+		if err := m.Context.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("context")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("context")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -96,6 +122,10 @@ func (m *ChatMessageResponse) validateReferences(formats strfmt.Registry) error 
 func (m *ChatMessageResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateContext(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateMessages(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -107,6 +137,27 @@ func (m *ChatMessageResponse) ContextValidate(ctx context.Context, formats strfm
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ChatMessageResponse) contextValidateContext(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Context != nil {
+
+		if swag.IsZero(m.Context) { // not required
+			return nil
+		}
+
+		if err := m.Context.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("context")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("context")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
