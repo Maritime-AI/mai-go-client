@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -71,12 +72,55 @@ func NewClient(apiToken string, opts ...Option) *Client {
 	return c
 }
 
+func (c *Client) PostPartnerCrew(ctx context.Context, partnerRefID string, params models.CrewParams) error {
+
+	url := fmt.Sprintf("%s://%s/api/v1/partners/crew", c.protocol, c.host)
+
+	data, err := json.Marshal(params)
+	if err != nil {
+		return fmt.Errorf("failed to marshal crew params: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(data))
+	if err != nil {
+		return fmt.Errorf("failed to create http request: %w", err)
+	}
+
+	req.Header.Set("Authorization", c.apiToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	httpCli := http.Client{
+		Timeout: c.timeout,
+	}
+
+	resp, err := httpCli.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to send http request: %w", err)
+	}
+
+	var respData []byte
+	if resp.Body != nil {
+		defer resp.Body.Close()
+
+		respData, err = io.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("failed to read response body: %w", err)
+		}
+	}
+
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("expected 204 status code got %d: %s", resp.StatusCode, string(respData))
+	}
+
+	return nil
+}
+
 // PostChatMessage sends a chat message to the oceo maritime ai api
 func (c *Client) PostChatMessage(orgRefID string, sessionID *string,
 	message string) (*models.ChatMessageResponse, error) {
 
 	url := fmt.Sprintf("%s://%s/api/v1/partners/organizations/%s/converse", c.protocol, c.host, orgRefID)
-	fmt.Print("somshie")
+
 	data, err := json.Marshal(&models.ChatMessageParams{
 		Message:   message,
 		SessionID: sessionID,
