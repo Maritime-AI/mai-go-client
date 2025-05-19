@@ -66,12 +66,6 @@ type PostPartnersOrganizationsIDConverseParams struct {
 	// Body.
 	Body *models.ChatMessageParams
 
-	/* CrewExternalID.
-
-	   The unqiue external id for the crew member
-	*/
-	CrewExternalID *string
-
 	/* ID.
 
 	   The unqiue partner organization reference id
@@ -142,17 +136,6 @@ func (o *PostPartnersOrganizationsIDConverseParams) SetBody(body *models.ChatMes
 	o.Body = body
 }
 
-// WithCrewExternalID adds the crewExternalID to the post partners organizations ID converse params
-func (o *PostPartnersOrganizationsIDConverseParams) WithCrewExternalID(crewExternalID *string) *PostPartnersOrganizationsIDConverseParams {
-	o.SetCrewExternalID(crewExternalID)
-	return o
-}
-
-// SetCrewExternalID adds the crewExternalId to the post partners organizations ID converse params
-func (o *PostPartnersOrganizationsIDConverseParams) SetCrewExternalID(crewExternalID *string) {
-	o.CrewExternalID = crewExternalID
-}
-
 // WithID adds the id to the post partners organizations ID converse params
 func (o *PostPartnersOrganizationsIDConverseParams) WithID(id string) *PostPartnersOrganizationsIDConverseParams {
 	o.SetID(id)
@@ -174,23 +157,6 @@ func (o *PostPartnersOrganizationsIDConverseParams) WriteToRequest(r runtime.Cli
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err
-		}
-	}
-
-	if o.CrewExternalID != nil {
-
-		// query param crew_external_id
-		var qrCrewExternalID string
-
-		if o.CrewExternalID != nil {
-			qrCrewExternalID = *o.CrewExternalID
-		}
-		qCrewExternalID := qrCrewExternalID
-		if qCrewExternalID != "" {
-
-			if err := r.SetQueryParam("crew_external_id", qCrewExternalID); err != nil {
-				return err
-			}
 		}
 	}
 

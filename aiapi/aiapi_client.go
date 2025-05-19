@@ -36,6 +36,8 @@ type ClientService interface {
 
 	GetPartnersOrganizationsIDConversationSessionID(params *GetPartnersOrganizationsIDConversationSessionIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetPartnersOrganizationsIDConversationSessionIDOK, error)
 
+	GetPartnersUsersIDConversationSessionID(params *GetPartnersUsersIDConversationSessionIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetPartnersUsersIDConversationSessionIDOK, error)
+
 	PostAdminsLogin(params *PostAdminsLoginParams, opts ...ClientOption) (*PostAdminsLoginOK, error)
 
 	PostAdminsPartnersOrganizationsIDConverse(params *PostAdminsPartnersOrganizationsIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostAdminsPartnersOrganizationsIDConverseOK, error)
@@ -43,6 +45,8 @@ type ClientService interface {
 	PostPartnersCrew(params *PostPartnersCrewParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersCrewNoContent, error)
 
 	PostPartnersOrganizationsIDConverse(params *PostPartnersOrganizationsIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersOrganizationsIDConverseOK, error)
+
+	PostPartnersUsersIDConverse(params *PostPartnersUsersIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersUsersIDConverseOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -167,6 +171,47 @@ func (a *Client) GetPartnersOrganizationsIDConversationSessionID(params *GetPart
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for GetPartnersOrganizationsIDConversationSessionID: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetPartnersUsersIDConversationSessionID gets user chat conversation
+
+Get user chat conversation
+*/
+func (a *Client) GetPartnersUsersIDConversationSessionID(params *GetPartnersUsersIDConversationSessionIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetPartnersUsersIDConversationSessionIDOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetPartnersUsersIDConversationSessionIDParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "GetPartnersUsersIDConversationSessionID",
+		Method:             "GET",
+		PathPattern:        "/partners/users/{id}/conversation/{session_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetPartnersUsersIDConversationSessionIDReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetPartnersUsersIDConversationSessionIDOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for GetPartnersUsersIDConversationSessionID: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -330,6 +375,47 @@ func (a *Client) PostPartnersOrganizationsIDConverse(params *PostPartnersOrganiz
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for PostPartnersOrganizationsIDConverse: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PostPartnersUsersIDConverse posts user chat message
+
+Post user chat message
+*/
+func (a *Client) PostPartnersUsersIDConverse(params *PostPartnersUsersIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersUsersIDConverseOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostPartnersUsersIDConverseParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostPartnersUsersIDConverse",
+		Method:             "POST",
+		PathPattern:        "/partners/users/{id}/converse",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &PostPartnersUsersIDConverseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostPartnersUsersIDConverseOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostPartnersUsersIDConverse: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
