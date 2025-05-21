@@ -33,6 +33,9 @@ type CredentialParams struct {
 	// Format: date
 	IssuedDate *strfmt.Date `json:"issued_date,omitempty"`
 
+	// The number of the credential
+	Number *string `json:"number,omitempty"`
+
 	// The title of the credential
 	Title string `json:"title,omitempty"`
 
