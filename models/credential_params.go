@@ -26,7 +26,7 @@ type CredentialParams struct {
 	// Format: date
 	ExpirationDate *strfmt.Date `json:"expiration_date,omitempty"`
 
-	// The unique partner user reference id
+	// The unique reference id of the credential
 	ExternalID string `json:"external_id,omitempty"`
 
 	// The date the credential was issued

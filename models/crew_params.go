@@ -55,6 +55,9 @@ type CrewParams struct {
 	// The phone of the user
 	Phone *string `json:"phone,omitempty"`
 
+	// The seatime of the user
+	Seatime []*SeatimeParams `json:"seatime"`
+
 	// The state of the user
 	State *string `json:"state,omitempty"`
 }
@@ -64,6 +67,10 @@ func (m *CrewParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCredentials(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSeatime(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -99,11 +106,41 @@ func (m *CrewParams) validateCredentials(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *CrewParams) validateSeatime(formats strfmt.Registry) error {
+	if swag.IsZero(m.Seatime) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Seatime); i++ {
+		if swag.IsZero(m.Seatime[i]) { // not required
+			continue
+		}
+
+		if m.Seatime[i] != nil {
+			if err := m.Seatime[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("seatime" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("seatime" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 // ContextValidate validate this crew params based on the context it is used
 func (m *CrewParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateCredentials(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSeatime(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -128,6 +165,31 @@ func (m *CrewParams) contextValidateCredentials(ctx context.Context, formats str
 					return ve.ValidateName("credentials" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("credentials" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *CrewParams) contextValidateSeatime(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Seatime); i++ {
+
+		if m.Seatime[i] != nil {
+
+			if swag.IsZero(m.Seatime[i]) { // not required
+				return nil
+			}
+
+			if err := m.Seatime[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("seatime" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("seatime" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
