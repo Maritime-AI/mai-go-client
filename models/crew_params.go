@@ -7,7 +7,9 @@ package models
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -25,6 +27,9 @@ type CrewParams struct {
 
 	// The country of the user
 	Country *string `json:"country,omitempty"`
+
+	// The credentials of the user
+	Credentials []*CredentialParams `json:"credentials"`
 
 	// The unique external id for the crew
 	CrewExternalID string `json:"crew_external_id,omitempty"`
@@ -56,11 +61,80 @@ type CrewParams struct {
 
 // Validate validates this crew params
 func (m *CrewParams) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCredentials(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this crew params based on context it is used
+func (m *CrewParams) validateCredentials(formats strfmt.Registry) error {
+	if swag.IsZero(m.Credentials) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Credentials); i++ {
+		if swag.IsZero(m.Credentials[i]) { // not required
+			continue
+		}
+
+		if m.Credentials[i] != nil {
+			if err := m.Credentials[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("credentials" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("credentials" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this crew params based on the context it is used
 func (m *CrewParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCredentials(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *CrewParams) contextValidateCredentials(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Credentials); i++ {
+
+		if m.Credentials[i] != nil {
+
+			if swag.IsZero(m.Credentials[i]) { // not required
+				return nil
+			}
+
+			if err := m.Credentials[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("credentials" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("credentials" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
