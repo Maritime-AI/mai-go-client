@@ -19,6 +19,15 @@ import (
 // swagger:model SeatimeParams
 type SeatimeParams struct {
 
+	// company name
+	CompanyName *string `json:"company_name,omitempty"`
+
+	// compensation
+	Compensation *string `json:"compensation,omitempty"`
+
+	// compensation frequency
+	CompensationFrequency *string `json:"compensation_frequency,omitempty"`
+
 	// crewed off
 	// Format: date
 	CrewedOff *strfmt.Date `json:"crewed_off,omitempty"`
