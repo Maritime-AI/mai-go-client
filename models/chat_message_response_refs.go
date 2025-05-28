@@ -17,8 +17,14 @@ import (
 // swagger:model ChatMessageResponseRefs
 type ChatMessageResponseRefs struct {
 
+	// credential ids
+	CredentialIds []string `json:"credential_ids"`
+
 	// crew external ids
 	CrewExternalIds []string `json:"crew_external_ids"`
+
+	// seatime ids
+	SeatimeIds []string `json:"seatime_ids"`
 }
 
 // Validate validates this chat message response refs
