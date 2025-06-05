@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -26,6 +27,9 @@ type ChatMessage struct {
 	// is ai generated
 	IsAiGenerated bool `json:"is_ai_generated,omitempty"`
 
+	// list response
+	ListResponse []*ChatListResponse `json:"list_response"`
+
 	// message
 	Message string `json:"message,omitempty"`
 
@@ -41,6 +45,10 @@ func (m *ChatMessage) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateListResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -62,8 +70,68 @@ func (m *ChatMessage) validateCreatedAt(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this chat message based on context it is used
+func (m *ChatMessage) validateListResponse(formats strfmt.Registry) error {
+	if swag.IsZero(m.ListResponse) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ListResponse); i++ {
+		if swag.IsZero(m.ListResponse[i]) { // not required
+			continue
+		}
+
+		if m.ListResponse[i] != nil {
+			if err := m.ListResponse[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("list_response" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("list_response" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this chat message based on the context it is used
 func (m *ChatMessage) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateListResponse(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ChatMessage) contextValidateListResponse(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ListResponse); i++ {
+
+		if m.ListResponse[i] != nil {
+
+			if swag.IsZero(m.ListResponse[i]) { // not required
+				return nil
+			}
+
+			if err := m.ListResponse[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("list_response" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("list_response" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
