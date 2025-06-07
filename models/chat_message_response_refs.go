@@ -23,6 +23,9 @@ type ChatMessageResponseRefs struct {
 	// crew external ids
 	CrewExternalIds []string `json:"crew_external_ids"`
 
+	// links
+	Links []string `json:"links"`
+
 	// seatime ids
 	SeatimeIds []string `json:"seatime_ids"`
 }
