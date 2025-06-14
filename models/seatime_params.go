@@ -39,8 +39,8 @@ type SeatimeParams struct {
 	// The unique reference id of sea time record
 	ExternalID string `json:"external_id,omitempty"`
 
-	// Is true if the mariner is currently crewed on a ship
-	IsCrewedOn bool `json:"is_crewed_on,omitempty"`
+	// is crewed on
+	IsCrewedOn *bool `json:"is_crewed_on,omitempty"`
 
 	// The total number of days the mariner has been at sea before shift in hours is applied
 	NumDays *float64 `json:"num_days,omitempty"`
@@ -74,6 +74,9 @@ type SeatimeParams struct {
 
 	// vessel type
 	VesselType *string `json:"vessel_type,omitempty"`
+
+	// water way
+	WaterWay *string `json:"water_way,omitempty"`
 }
 
 // Validate validates this seatime params
