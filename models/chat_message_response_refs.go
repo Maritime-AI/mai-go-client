@@ -17,6 +17,9 @@ import (
 // swagger:model ChatMessageResponseRefs
 type ChatMessageResponseRefs struct {
 
+	// actions
+	Actions []string `json:"actions"`
+
 	// credential ids
 	CredentialIds []string `json:"credential_ids"`
 
