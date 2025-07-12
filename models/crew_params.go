@@ -50,7 +50,7 @@ type CrewParams struct {
 	MiddleName *string `json:"middle_name,omitempty"`
 
 	// The unique partner organization reference id
-	PartnerOrganizationID string `json:"partner_organization_id,omitempty"`
+	PartnerOrganizationID *string `json:"partner_organization_id,omitempty"`
 
 	// The phone of the user
 	Phone *string `json:"phone,omitempty"`
