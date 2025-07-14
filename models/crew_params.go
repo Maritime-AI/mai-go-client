@@ -34,6 +34,9 @@ type CrewParams struct {
 	// The unique external id for the crew
 	CrewExternalID string `json:"crew_external_id,omitempty"`
 
+	// The crew schedules of the user
+	CrewSchedules []*CrewSchedule `json:"crew_schedules"`
+
 	// The email of the user
 	Email *string `json:"email,omitempty"`
 
@@ -70,6 +73,10 @@ func (m *CrewParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCrewSchedules(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSeatime(formats); err != nil {
 		res = append(res, err)
 	}
@@ -96,6 +103,32 @@ func (m *CrewParams) validateCredentials(formats strfmt.Registry) error {
 					return ve.ValidateName("credentials" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("credentials" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *CrewParams) validateCrewSchedules(formats strfmt.Registry) error {
+	if swag.IsZero(m.CrewSchedules) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.CrewSchedules); i++ {
+		if swag.IsZero(m.CrewSchedules[i]) { // not required
+			continue
+		}
+
+		if m.CrewSchedules[i] != nil {
+			if err := m.CrewSchedules[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("crew_schedules" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("crew_schedules" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -140,6 +173,10 @@ func (m *CrewParams) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateCrewSchedules(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSeatime(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -165,6 +202,31 @@ func (m *CrewParams) contextValidateCredentials(ctx context.Context, formats str
 					return ve.ValidateName("credentials" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("credentials" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *CrewParams) contextValidateCrewSchedules(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.CrewSchedules); i++ {
+
+		if m.CrewSchedules[i] != nil {
+
+			if swag.IsZero(m.CrewSchedules[i]) { // not required
+				return nil
+			}
+
+			if err := m.CrewSchedules[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("crew_schedules" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("crew_schedules" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
