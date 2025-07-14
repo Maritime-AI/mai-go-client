@@ -34,6 +34,9 @@ type CrewSchedule struct {
 	// Format: date
 	CrewedOn strfmt.Date `json:"crewed_on,omitempty"`
 
+	// The total number of days the mariner has been at sea before shift in hours is applied
+	NumDays *float64 `json:"num_days,omitempty"`
+
 	// The position of the crew member on the vessel
 	Position string `json:"position,omitempty"`
 
