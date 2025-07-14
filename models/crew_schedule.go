@@ -52,6 +52,9 @@ type CrewSchedule struct {
 	// vessel capacity gt
 	VesselCapacityGt *int64 `json:"vessel_capacity_gt,omitempty"`
 
+	// The unique reference id of the vessel
+	VesselExternalID string `json:"vessel_external_id,omitempty"`
+
 	// vessel flag
 	VesselFlag *string `json:"vessel_flag,omitempty"`
 
