@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -18,6 +19,9 @@ import (
 //
 // swagger:model CredentialParams
 type CredentialParams struct {
+
+	// details
+	Details []*CredentialDetails `json:"details"`
 
 	// The endorsements associated with the credential
 	Endorsements []string `json:"endorsements"`
@@ -47,6 +51,10 @@ type CredentialParams struct {
 func (m *CredentialParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateDetails(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateExpirationDate(formats); err != nil {
 		res = append(res, err)
 	}
@@ -58,6 +66,32 @@ func (m *CredentialParams) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *CredentialParams) validateDetails(formats strfmt.Registry) error {
+	if swag.IsZero(m.Details) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Details); i++ {
+		if swag.IsZero(m.Details[i]) { // not required
+			continue
+		}
+
+		if m.Details[i] != nil {
+			if err := m.Details[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("details" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("details" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -85,8 +119,42 @@ func (m *CredentialParams) validateIssuedDate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this credential params based on context it is used
+// ContextValidate validate this credential params based on the context it is used
 func (m *CredentialParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateDetails(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *CredentialParams) contextValidateDetails(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Details); i++ {
+
+		if m.Details[i] != nil {
+
+			if swag.IsZero(m.Details[i]) { // not required
+				return nil
+			}
+
+			if err := m.Details[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("details" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("details" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
