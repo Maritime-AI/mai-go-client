@@ -29,6 +29,9 @@ type ChatMessageResponseRefs struct {
 	// crew schedule ids
 	CrewScheduleIds []string `json:"crew_schedule_ids"`
 
+	// crew schedule vessel ids
+	CrewScheduleVesselIds []string `json:"crew_schedule_vessel_ids"`
+
 	// links
 	Links []string `json:"links"`
 
