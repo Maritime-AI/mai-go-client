@@ -14,6 +14,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/client"
+	runtimeclient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
 
@@ -238,16 +239,17 @@ func (c *Client) GetUserConversation(sessionID, userID string) (*models.ChatMess
 	// Initialize the client
 	client := aiapi.New(transport, formats)
 
-	auth := runtime.ClientAuthInfoWriterFunc(func(req runtime.ClientRequest, _ strfmt.Registry) error {
-		return req.SetHeaderParam("Authorization", c.apiToken)
-	})
+	//auth := runtime.ClientAuthInfoWriterFunc(func(req runtime.ClientRequest, _ strfmt.Registry) error {
+	//	return req.SetHeaderParam("Authorization", c.apiToken)
+	//})
+	authInfo := runtimeclient.APIKeyAuth("Authorization", "header", c.apiToken)
 
 	params := aiapi.NewGetPartnersUsersIDConversationSessionIDParams().
 		WithSessionID(sessionID).
 		WithID(userID)
 	WithTimeout(c.timeout)
 
-	resp, err := client.GetPartnersUsersIDConversationSessionID(params, auth)
+	resp, err := client.GetPartnersUsersIDConversationSessionID(params, authInfo)
 	if err != nil {
 		return nil, err
 	}
