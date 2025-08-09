@@ -23,8 +23,8 @@ type CredentialParams struct {
 	// details
 	Details []*CredentialDetails `json:"details"`
 
-	// The endorsements associated with the credential
-	Endorsements []string `json:"endorsements"`
+	// endorsements
+	Endorsements []*Endorsement `json:"endorsements"`
 
 	// The date the credential expires
 	// Format: date
@@ -52,6 +52,10 @@ func (m *CredentialParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDetails(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEndorsements(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -95,6 +99,32 @@ func (m *CredentialParams) validateDetails(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *CredentialParams) validateEndorsements(formats strfmt.Registry) error {
+	if swag.IsZero(m.Endorsements) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Endorsements); i++ {
+		if swag.IsZero(m.Endorsements[i]) { // not required
+			continue
+		}
+
+		if m.Endorsements[i] != nil {
+			if err := m.Endorsements[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("endorsements" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("endorsements" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *CredentialParams) validateExpirationDate(formats strfmt.Registry) error {
 	if swag.IsZero(m.ExpirationDate) { // not required
 		return nil
@@ -127,6 +157,10 @@ func (m *CredentialParams) ContextValidate(ctx context.Context, formats strfmt.R
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateEndorsements(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -148,6 +182,31 @@ func (m *CredentialParams) contextValidateDetails(ctx context.Context, formats s
 					return ve.ValidateName("details" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("details" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *CredentialParams) contextValidateEndorsements(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Endorsements); i++ {
+
+		if m.Endorsements[i] != nil {
+
+			if swag.IsZero(m.Endorsements[i]) { // not required
+				return nil
+			}
+
+			if err := m.Endorsements[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("endorsements" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("endorsements" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
