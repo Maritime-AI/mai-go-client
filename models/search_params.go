@@ -17,6 +17,9 @@ import (
 // swagger:model SearchParams
 type SearchParams struct {
 
+	// crew external ids
+	CrewExternalIds []string `json:"crew_external_ids"`
+
 	// limit
 	Limit *int64 `json:"limit,omitempty"`
 
