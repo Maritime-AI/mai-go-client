@@ -72,6 +72,44 @@ func NewClient(apiToken string, opts ...Option) *Client {
 	return c
 }
 
+func (c *Client) PostSearch(ctx context.Context, partnerOrgRefID string, params models.SearchParams) (*models.SearchResponse, error) {
+
+	url := fmt.Sprintf("%s://%s/api/v1/partners/organizations/%s/search", c.protocol, c.host, partnerOrgRefID)
+
+	data, err := json.Marshal(params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal search params: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create http request: %w", err)
+	}
+
+	req.Header.Set("Authorization", c.apiToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	httpCli := http.Client{
+		Timeout: c.timeout,
+	}
+
+	resp, err := httpCli.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send http request: %w", err)
+	}
+
+	if resp == nil {
+		return nil, fmt.Errorf("received nil response from server")
+	}
+
+	var respData models.SearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return &respData, nil
+}
+
 func (c *Client) PostPartnerCrew(ctx context.Context, params models.CrewParams) error {
 
 	url := fmt.Sprintf("%s://%s/api/v1/partners/crew", c.protocol, c.host)
