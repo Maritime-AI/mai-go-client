@@ -46,6 +46,8 @@ type ClientService interface {
 
 	PostPartnersOrganizationsIDConverse(params *PostPartnersOrganizationsIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersOrganizationsIDConverseOK, error)
 
+	PostPartnersOrganizationsIDSearch(params *PostPartnersOrganizationsIDSearchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersOrganizationsIDSearchOK, error)
+
 	PostPartnersUsersIDConverse(params *PostPartnersUsersIDConverseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersUsersIDConverseOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
@@ -375,6 +377,47 @@ func (a *Client) PostPartnersOrganizationsIDConverse(params *PostPartnersOrganiz
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for PostPartnersOrganizationsIDConverse: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PostPartnersOrganizationsIDSearch posts search
+
+Post search
+*/
+func (a *Client) PostPartnersOrganizationsIDSearch(params *PostPartnersOrganizationsIDSearchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPartnersOrganizationsIDSearchOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostPartnersOrganizationsIDSearchParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostPartnersOrganizationsIDSearch",
+		Method:             "POST",
+		PathPattern:        "/partners/organizations/{id}/search",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &PostPartnersOrganizationsIDSearchReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostPartnersOrganizationsIDSearchOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostPartnersOrganizationsIDSearch: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
